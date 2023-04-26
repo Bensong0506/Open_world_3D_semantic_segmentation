@@ -113,7 +113,7 @@ def main(args):
             # point_uncertainty_softmax.tofile(
             #     '/harddisk/jcenaa/semantic_kitti/predictions/sequences/08/scores_softmax_naive/' + idx_s + '.label')
             point_predict.tofile(
-                '/harddisk/jcenaa/semantic_kitti/predictions/sequences/08/predictions_base_train/' + idx_s + '.label')
+                '/cluster/scratch/wesong/semantic_kitti/predictions/sequences/08/predictions_base_train/' + idx_s + '.label')
 
             for count, i_val_grid in enumerate(val_grid):
                 hist_list.append(fast_hist_crop(predict_labels[

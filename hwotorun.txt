@@ -1,0 +1,4 @@
+source my_env/bin/activate
+module load gcc/8.2.0 python/3.10.4
+sbatch job1.sh
+squeue

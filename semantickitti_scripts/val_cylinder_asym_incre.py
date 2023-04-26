@@ -11,7 +11,7 @@ sys.path.append("..")
 import numpy as np
 import torch
 import torch.optim as optim
-import spconv
+import spconv.pytorch as spconv
 from tqdm import tqdm
 
 from utils.metric_util import per_class_iu, fast_hist_crop
@@ -107,8 +107,8 @@ def main(args):
             count = 0
             point_predict = predict_labels[count, val_grid[count][:, 0], val_grid[count][:, 1],val_grid[count][:, 2]].astype(np.int32)
             idx_s = "%06d" % idx[0]
-            # point_predict.tofile(
-            #     '/harddisk/jcenaa/semantic_kitti/predictions/sequences/08/predictions_incre/' + idx_s + '.label')
+            point_predict.tofile(
+                 '/cluster/scratch/wesong/semantic_kitti/predictions/sequences/08/predictions_incre/' + idx_s + '.label')
 
             for count, i_val_grid in enumerate(val_grid):
                 hist_list.append(fast_hist_crop(predict_labels[
@@ -131,9 +131,26 @@ def main(args):
 
 
 if __name__ == '__main__':
+        # Training settings
+    if torch.cuda.is_available():
+        # Get the number of available GPUs
+        num_gpus = torch.cuda.device_count()
+        print("Number of GPUs: ", num_gpus)
+        
+        # Loop through all available GPUs
+        for i in range(num_gpus):
+            # Get the GPU device
+            device = torch.cuda.get_device_name(i)
+            # Get the CUDA version
+            cuda_version = torch.version.cuda
+            print("GPU Device {}: {}".format(i, device))
+            print("CUDA Version: ", cuda_version)
+    else:
+        print("No GPU available.")
+        
     # Training settings
     parser = argparse.ArgumentParser(description='')
-    parser.add_argument('-y', '--config_path', default='../config/semantickitti.yaml')
+    parser.add_argument('-y', '--config_path', default='../config/semantickitti_ood_incre.yaml')
     parser.add_argument('--dummynumber', default=3, type=int, help='number of dummy label.')
     args = parser.parse_args()
 
